@@ -54,6 +54,10 @@ class GameObject {
     this.baseImage.getImage().onload = () => {
       this.drawGameBoard();
     }
+    // 200回ランダムで動かす
+    [...Array(200)].forEach(()=>{
+      this.randMove();
+    })
   }
   moveParts(dx, dy) {
     // 範囲内かを確認する
@@ -68,6 +72,23 @@ class GameObject {
       this.board[this.nullPoint.x+dx][this.nullPoint.y+dy] = null;
       this.nullPoint.x += dx;
       this.nullPoint.y += dy;
+    }
+  }
+  randMove() {
+    const num = Math.floor(Math.random()*4);
+    switch(num){
+      case 0:
+        this.moveParts(-1, 0);
+        break;
+      case 1:
+        this.moveParts(1, 0);
+        break;
+      case 2:
+        this.moveParts(0, 1);
+        break;
+      case 3:
+        this.moveParts(0, -1);
+        break;
     }
   }
   drawGameBoard() {
