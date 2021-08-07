@@ -6,21 +6,24 @@ window.onload = () => {
       this.image.src = "./image/annica.jpg";
       this.imageSize = 1080;
       this.ctx = ctx;
+      this.windowSize = 800;
     }
     getImage() {
       return this.image;
     }
-    drawImage() {
+    drawImage(partsNum, px, py, dx, dy) {
+      const imagePartsSize = this.imageSize/partsNum;
+      const drawPatsSize = this.windowSize/partsNum;
       this.ctx.drawImage(
         baseImage.getImage(),
-        0,
-        0,
-        this.imageSize,
-        this.imageSize,
-        0,
-        0,
-        800,
-        800
+        imagePartsSize * px,
+        imagePartsSize * py,
+        imagePartsSize,
+        imagePartsSize,
+        drawPatsSize * dx,
+        drawPatsSize * dy,
+        drawPatsSize,
+        drawPatsSize
       );
     }
   }
@@ -28,6 +31,9 @@ window.onload = () => {
   const ctx = canvas.getContext('2d');
   const baseImage = new BaseImage(ctx);
   baseImage.getImage().onload = () => {
-    baseImage.drawImage();
+    baseImage.drawImage(4, 0, 0, 0, 0);
+    baseImage.drawImage(4, 0, 1, 0, 1);
+    baseImage.drawImage(4, 0, 2, 0, 2);
+    baseImage.drawImage(4, 0, 3, 0, 3);
   }
 }
