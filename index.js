@@ -1,4 +1,5 @@
 "use strict"
+const BOARD_NUM = 2;
 class BaseImage {
   constructor(ctx, widowSize) {
     this.image = new Image();
@@ -31,7 +32,7 @@ class GameObject {
     this.canvas = document.getElementById('canvas');
     this.ctx = canvas.getContext('2d');
     this.windowSize = 800;
-    this.partsNum = 4;
+    this.partsNum = BOARD_NUM;
     this.baseImage = new BaseImage(this.ctx, this.windowSize);
     this.moveCount = 0;
     this.initGame();
@@ -60,6 +61,7 @@ class GameObject {
       this.randMove();
     });
     this.moveCount = 0;
+    this.isClear = false;
   }
   moveParts(dx, dy) {
     // 範囲内かを確認する
@@ -79,6 +81,23 @@ class GameObject {
   }
   getCount() {
     return this.moveCount;
+  }
+  getIsClear() {
+    return this.isClear;
+  }
+  clearCheck() {
+    let isClear = true;
+    for(let x=0; x<this.partsNum; x++) {
+      for(let y=0; y<this.partsNum; y++) {
+        if(this.board[x][y] === null) {
+          continue;
+        }
+        if(this.board[x][y].x !== x || this.board[x][y].y !== y) {
+          isClear = false;
+        }
+      }
+    }
+    this.isClear = isClear;
   }
   randMove() {
     const num = Math.floor(Math.random()*4);
@@ -112,10 +131,9 @@ class GameObject {
 window.onload = () => {
   const game = new GameObject();
   window.addEventListener("keydown", (evt) => {
-    console.log(evt);
     const key = evt.key;
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
-    if(keyList.includes(key)) {
+    if(keyList.includes(key) && !game.getIsClear()) {
       switch(key) {
         case 'ArrowRight':
           game.moveParts(-1, 0);
@@ -131,7 +149,9 @@ window.onload = () => {
           break;
       }
       game.drawGameBoard();
+      game.clearCheck();
       document.getElementById('count').innerText = `Count: ${game.getCount()}`;
+      document.getElementById('status').innerText = `Clear: ${game.getIsClear()}`;
     }
   });
 }
