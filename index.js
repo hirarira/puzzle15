@@ -1,5 +1,6 @@
 "use strict"
 const BOARD_NUM = 2;
+const RANDOM_MOVER = 200;
 class BaseImage {
   constructor(ctx, widowSize) {
     this.image = new Image();
@@ -56,8 +57,8 @@ class GameObject {
     this.baseImage.getImage().onload = () => {
       this.drawGameBoard();
     }
-    // 200回ランダムで動かす
-    [...Array(200)].forEach(()=>{
+    // ランダムで動かして盤面を作成する
+    [...Array(RANDOM_MOVER)].forEach(()=>{
       this.randMove();
     });
     this.moveCount = 0;
@@ -97,6 +98,7 @@ class GameObject {
         }
       }
     }
+    console.log("hoge");
     this.isClear = isClear;
   }
   randMove() {
@@ -151,7 +153,9 @@ window.onload = () => {
       game.drawGameBoard();
       game.clearCheck();
       document.getElementById('count').innerText = `Count: ${game.getCount()}`;
-      document.getElementById('status').innerText = `Clear: ${game.getIsClear()}`;
+      if(game.getIsClear()) {
+        document.getElementById('status').innerText = '状況：クリア！';
+      }
     }
   });
 }
