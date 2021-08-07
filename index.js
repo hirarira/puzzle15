@@ -3,6 +3,12 @@ const BOARD_NUM = 3;
 const RANDOM_MOVER = 100;
 let restartGame;
 
+const wait = (ms) => {
+  return new Promise((resolve)=>{
+    setTimeout(resolve, ms);
+  })
+} 
+
 class BaseImage {
   constructor(ctx, widowSize, src = "./image/annica.jpg") {
     this.image = new Image();
@@ -29,6 +35,12 @@ class BaseImage {
       drawPatsSize
     );
   }
+  onloadImage() {
+    return new Promise((resolve, reject)=>{
+      this.image.onload = () => resolve();
+      this.image.onerror = (e) => reject();
+    })
+  }
 }
 class GameObject {
   constructor() {
@@ -38,6 +50,7 @@ class GameObject {
     this.partsNum = BOARD_NUM;
     this.baseImage = new BaseImage(this.ctx, this.windowSize);
     this.moveCount = 0;
+    this.isMoving = false;
     this.sound = {
       move: new Audio("./music/cursor1.wav"),
       clear: new Audio("./music/clear2.mp3")
@@ -73,34 +86,40 @@ class GameObject {
       x: this.partsNum - 1,
       y: this.partsNum - 1
     }
-    this.baseImage.getImage().onload = () => {
-      this.drawGameBoard();
-    }
     // ランダムで動かして盤面を作成する
     // ランダムで動かす数を取得する
-    let randMoveNum = Number(document.getElementById("resetRandomNum").value);
-    randMoveNum = randMoveNum < 100? 100: randMoveNum;
-    [...Array(randMoveNum)].forEach(()=>{
-      this.randMove();
-    });
-    this.moveCount = 0;
-    this.isClear = false;
+    // let randMoveNum = Number(document.getElementById("resetRandomNum").value);
+    // randMoveNum = randMoveNum < 100? 100: randMoveNum;
+    const randMoveNum = 5;
+    (async ()=>{
+      await this.baseImage.onloadImage();
+      for(let i=0; i<randMoveNum; i++) {
+        await this.randMove();
+      }
+      this.moveCount = 0;
+      this.isClear = false;
+    })()
   }
-  moveParts(dx, dy) {
+  async moveParts(dx, dy) {
     // 範囲内かを確認する
     if(this.nullPoint.x + dx >= 0 && this.nullPoint.x + dx < this.partsNum &&
         this.nullPoint.y + dy >= 0 && this.nullPoint.y + dy < this.partsNum
-    ) {
+    ) {    
+      this.isMoving = true;
       const target = this.board[this.nullPoint.x+dx][this.nullPoint.y+dy];
+      this.board[this.nullPoint.x+dx][this.nullPoint.y+dy] = null;
+      // 動きを入れる
+      await wait(500)
       this.board[this.nullPoint.x][this.nullPoint.y] = {
         x: target.x,
         y: target.y
       }
-      this.board[this.nullPoint.x+dx][this.nullPoint.y+dy] = null;
       this.nullPoint.x += dx;
       this.nullPoint.y += dy;
+      this.drawGameBoard();
+      this.moveCount++;    
+      this.isMoving = false;
     }
-    this.moveCount++;
   }
   getCount() {
     return this.moveCount;
@@ -122,20 +141,20 @@ class GameObject {
     }
     this.isClear = isClear;
   }
-  randMove() {
+  async randMove() {
     const num = Math.floor(Math.random()*4);
     switch(num){
       case 0:
-        this.moveParts(-1, 0);
+        await this.moveParts(-1, 0);
         break;
       case 1:
-        this.moveParts(1, 0);
+        await this.moveParts(1, 0);
         break;
       case 2:
-        this.moveParts(0, 1);
+        await this.moveParts(0, 1);
         break;
       case 3:
-        this.moveParts(0, -1);
+        await this.moveParts(0, -1);
         break;
     }
   }
@@ -152,7 +171,7 @@ class GameObject {
   }
   keyDown(key) {
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
-    if(keyList.includes(key) && !this.isClear) {
+    if(keyList.includes(key) && !this.isClear && !this.isMoving) {
       // カーソルを動かしたときのSEを流す
       this.sound.move.play();
       switch(key) {
@@ -185,7 +204,6 @@ window.onload = () => {
   const game = new GameObject();
   restartGame = () => {
     game.initGame();
-    game.drawGameBoard();
     document.getElementById('status').innerText = '状況：プレイ中';
     document.getElementById('count').innerText = `Count: ${game.getCount()}`;
   }
