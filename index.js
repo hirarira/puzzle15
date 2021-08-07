@@ -4,9 +4,9 @@ const RANDOM_MOVER = 100;
 let restartGame;
 
 class BaseImage {
-  constructor(ctx, widowSize) {
+  constructor(ctx, widowSize, src = "./image/annica.jpg") {
     this.image = new Image();
-    this.image.src = "./image/annica.jpg";
+    this.image.src = src;
     this.imageSize = 1080;
     this.ctx = ctx;
     this.windowSize = widowSize;
@@ -42,8 +42,14 @@ class GameObject {
   }
   initGame() {
     // リスタートボタンを非表示にする
-    const restartArea = document.getElementById("restart");
-    restartArea.style.display = 'none';
+    // const restartArea = document.getElementById("restart");
+    // restartArea.style.display = 'none';
+    // 背景画像が入力されているかを確認する
+    const imageURLPath = document.getElementById("imageURLInput").value;
+    console.log(imageURLPath);
+    if(imageURLPath) {
+      this.baseImage = new BaseImage(this.ctx, this.windowSize, imageURLPath);
+    }
     // boardをリセットする
     this.board = [...Array(this.partsNum)].map((x, i)=>{
       return [...Array(this.partsNum)].map((x, j)=>{
@@ -167,8 +173,8 @@ window.onload = () => {
       if(game.getIsClear()) {
         document.getElementById('status').innerText = '状況：クリア！';
         // リスタートボタンを表示する
-        const restartArea = document.getElementById("restart");
-        restartArea.style.display = 'block';
+        // const restartArea = document.getElementById("restart");
+        // restartArea.style.display = 'block';
       }
     }
   });
