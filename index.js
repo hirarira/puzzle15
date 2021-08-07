@@ -1,6 +1,8 @@
 "use strict"
-const BOARD_NUM = 2;
-const RANDOM_MOVER = 200;
+const BOARD_NUM = 3;
+const RANDOM_MOVER = 100;
+let restartGame;
+
 class BaseImage {
   constructor(ctx, widowSize) {
     this.image = new Image();
@@ -39,6 +41,9 @@ class GameObject {
     this.initGame();
   }
   initGame() {
+    // リスタートボタンを非表示にする
+    const restartArea = document.getElementById("restart");
+    restartArea.style.display = 'none';
     // boardをリセットする
     this.board = [...Array(this.partsNum)].map((x, i)=>{
       return [...Array(this.partsNum)].map((x, j)=>{
@@ -98,7 +103,6 @@ class GameObject {
         }
       }
     }
-    console.log("hoge");
     this.isClear = isClear;
   }
   randMove() {
@@ -130,8 +134,14 @@ class GameObject {
     }
   }
 }
+
 window.onload = () => {
   const game = new GameObject();
+  restartGame = () => {
+    game.initGame();
+    game.drawGameBoard();
+    document.getElementById('count').innerText = `Count: ${game.getCount()}`;
+  }
   window.addEventListener("keydown", (evt) => {
     const key = evt.key;
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
@@ -155,6 +165,9 @@ window.onload = () => {
       document.getElementById('count').innerText = `Count: ${game.getCount()}`;
       if(game.getIsClear()) {
         document.getElementById('status').innerText = '状況：クリア！';
+        // リスタートボタンを表示する
+        const restartArea = document.getElementById("restart");
+        restartArea.style.display = 'block';
       }
     }
   });
