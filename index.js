@@ -51,6 +51,9 @@ class GameObject {
       x: this.partsNum - 1,
       y: this.partsNum - 1
     }
+    this.baseImage.getImage().onload = () => {
+      this.drawGameBoard();
+    }
   }
   moveParts(dx, dy) {
     // 範囲内かを確認する
@@ -68,15 +71,12 @@ class GameObject {
     }
   }
   drawGameBoard() {
-    console.log(this.board);
-    this.baseImage.getImage().onload = () => {
-      this.ctx.clearRect(0, 0, this.windowSize, this.windowSize)
-      for(const x in this.board){
-        for(const y in this.board[x]){
-          const parts = this.board[x][y];
-          if(parts !== null) {
-            this.baseImage.drawImage(this.partsNum, parts.x, parts.y, x, y);
-          }
+    this.ctx.clearRect(0, 0, this.windowSize, this.windowSize)
+    for(const x in this.board){
+      for(const y in this.board[x]){
+        const parts = this.board[x][y];
+        if(parts !== null) {
+          this.baseImage.drawImage(this.partsNum, parts.x, parts.y, x, y);
         }
       }
     }
@@ -84,8 +84,25 @@ class GameObject {
 }
 window.onload = () => {
   const game = new GameObject();
-  game.moveParts(-1, 0);
-  game.moveParts(0, -1);
-  game.moveParts(-1, 0);
-  game.drawGameBoard();
+  window.addEventListener("keydown", (evt) => {
+    const key = evt.key;
+    const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
+    if(keyList.includes(key)) {
+      switch(key) {
+        case 'ArrowRight':
+          game.moveParts(-1, 0);
+          break;
+        case 'ArrowLeft':
+          game.moveParts(1, 0);
+          break;
+        case 'ArrowDown':
+          game.moveParts(0, -1);
+          break;
+        case 'ArrowUp':
+          game.moveParts(0, 1);
+          break;
+      }
+      game.drawGameBoard();
+    }
+  });
 }
