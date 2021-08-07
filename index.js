@@ -126,9 +126,8 @@ class GameObject {
     }
     // ランダムで動かして盤面を作成する
     // ランダムで動かす数を取得する
-    // let randMoveNum = Number(document.getElementById("resetRandomNum").value);
-    // randMoveNum = randMoveNum < 100? 100: randMoveNum;
-    const randMoveNum = 10;
+    let randMoveNum = Number(document.getElementById("resetRandomNum").value);
+    randMoveNum = randMoveNum < 10? 10: randMoveNum;
     (async ()=>{
       if(!this.baseImage.getIsLoaded()) {
         await this.baseImage.onloadImage();
