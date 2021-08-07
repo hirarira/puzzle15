@@ -140,6 +140,7 @@ window.onload = () => {
   restartGame = () => {
     game.initGame();
     game.drawGameBoard();
+    document.getElementById('status').innerText = '状況：プレイ中';
     document.getElementById('count').innerText = `Count: ${game.getCount()}`;
   }
   window.addEventListener("keydown", (evt) => {
