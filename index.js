@@ -38,6 +38,10 @@ class GameObject {
     this.partsNum = BOARD_NUM;
     this.baseImage = new BaseImage(this.ctx, this.windowSize);
     this.moveCount = 0;
+    this.sound = {
+      move: new Audio("./music/cursor1.wav"),
+      clear: new Audio("./music/clear2.mp3")
+    }
     this.initGame();
   }
   initGame() {
@@ -160,6 +164,8 @@ window.onload = () => {
     const key = evt.key;
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
     if(keyList.includes(key) && !game.getIsClear()) {
+      // カーソルを動かしたときのSEを流す
+      game.sound.move.play();
       switch(key) {
         case 'ArrowRight':
           game.moveParts(-1, 0);
@@ -178,10 +184,9 @@ window.onload = () => {
       game.clearCheck();
       document.getElementById('count').innerText = `Count: ${game.getCount()}`;
       if(game.getIsClear()) {
+        // クリアファンファーレを流す
+        game.sound.clear.play();
         document.getElementById('status').innerText = '状況：クリア！';
-        // リスタートボタンを表示する
-        // const restartArea = document.getElementById("restart");
-        // restartArea.style.display = 'block';
       }
     }
   });
