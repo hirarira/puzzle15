@@ -21,6 +21,19 @@ class BaseImage {
   getImage() {
     return this.image;
   }
+  gameClearDraw() {
+    this.ctx.drawImage(
+      this.image,
+      0,
+      0,
+      this.imageSize,
+      this.imageSize,
+      0,
+      0,
+      this.windowSize,
+      this.windowSize
+    );
+  }
   drawImage(partsNum, px, py, dx, dy) {
     const imagePartsSize = this.imageSize/partsNum;
     const drawPatsSize = this.windowSize/partsNum;
@@ -199,23 +212,26 @@ class GameObject {
       }
     }
   }
-  keyDown(key) {
+  clearDrawBoard() {
+    this.baseImage.gameClearDraw();
+  }
+  async keyDown(key) {
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
     if(keyList.includes(key) && !this.isClear && !this.isMoving) {
       // カーソルを動かしたときのSEを流す
       this.sound.move.play();
       switch(key) {
         case 'ArrowRight':
-          this.moveParts(-1, 0);
+          await this.moveParts(-1, 0);
           break;
         case 'ArrowLeft':
-          this.moveParts(1, 0);
+          await this.moveParts(1, 0);
           break;
         case 'ArrowDown':
-          this.moveParts(0, -1);
+          await this.moveParts(0, -1);
           break;
         case 'ArrowUp':
-          this.moveParts(0, 1);
+          await this.moveParts(0, 1);
           break;
       }
       this.drawGameBoard();
@@ -225,6 +241,11 @@ class GameObject {
         // クリアファンファーレを流す
         this.sound.clear.play();
         document.getElementById('status').innerText = '状況：クリア！';
+        this.board[this.partsNum-1][this.partsNum-1] = {
+          x: this.partsNum,
+          y: this.partsNum
+        };
+        this.clearDrawBoard();
       }
     }
   }
@@ -237,8 +258,8 @@ window.onload = () => {
     document.getElementById('status').innerText = '状況：プレイ中';
     document.getElementById('count').innerText = `Count: ${game.getCount()}`;
   }
-  window.addEventListener("keydown", (evt) => {
+  window.addEventListener("keydown", async (evt) => {
     const key = evt.key;
-    game.keyDown(key);
+    await game.keyDown(key);
   });
 }
