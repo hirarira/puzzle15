@@ -46,9 +46,13 @@ class GameObject {
     // restartArea.style.display = 'none';
     // 背景画像が入力されているかを確認する
     const imageURLPath = document.getElementById("imageURLInput").value;
-    console.log(imageURLPath);
     if(imageURLPath) {
       this.baseImage = new BaseImage(this.ctx, this.windowSize, imageURLPath);
+    }
+    // 分割パーツ数を設定
+    const partsNum = Number(document.getElementById("splitNum").value);
+    if(partsNum > 1) {
+      this.partsNum = partsNum;
     }
     // boardをリセットする
     this.board = [...Array(this.partsNum)].map((x, i)=>{
@@ -69,7 +73,10 @@ class GameObject {
       this.drawGameBoard();
     }
     // ランダムで動かして盤面を作成する
-    [...Array(RANDOM_MOVER)].forEach(()=>{
+    // ランダムで動かす数を取得する
+    let randMoveNum = Number(document.getElementById("resetRandomNum").value);
+    randMoveNum = randMoveNum < 100? 100: randMoveNum;
+    [...Array(randMoveNum)].forEach(()=>{
       this.randMove();
     });
     this.moveCount = 0;

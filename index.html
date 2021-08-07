@@ -30,16 +30,38 @@
           状況：プレイ中
         </div>
       </div>
-      <div class="row">
-        <div class="col">
-          <form>
+      <form>
+        <div class="row">
+          <div class="col">
             <div class="form-group">
               <label for="imageURLInput">背景画像URL</label>
               <input type="url" class="form-control" id="imageURLInput" placeholder="">
             </div>
-          </form>
+          </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="splitNum">分割パーツ数</label>
+              <select class="form-control" id="splitNum">
+                <option>2</option>
+                <option selected>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="resetRandomNum">シャッフル数</label>
+              <input type="text" class="form-control" id="resetRandomNum" value="100"></select>
+            </div>
+          </div>
+        </div>
+      </form>
       <div class="row">
         <div class="col" id="restart">
           <button type="button" class="btn btn-primary" onclick="restartGame()">
