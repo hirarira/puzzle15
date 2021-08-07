@@ -33,6 +33,7 @@ class GameObject {
     this.windowSize = 800;
     this.partsNum = 4;
     this.baseImage = new BaseImage(this.ctx, this.windowSize);
+    this.moveCount = 0;
     this.initGame();
   }
   initGame() {
@@ -57,7 +58,8 @@ class GameObject {
     // 200回ランダムで動かす
     [...Array(200)].forEach(()=>{
       this.randMove();
-    })
+    });
+    this.moveCount = 0;
   }
   moveParts(dx, dy) {
     // 範囲内かを確認する
@@ -73,6 +75,10 @@ class GameObject {
       this.nullPoint.x += dx;
       this.nullPoint.y += dy;
     }
+    this.moveCount++;
+  }
+  getCount() {
+    return this.moveCount;
   }
   randMove() {
     const num = Math.floor(Math.random()*4);
@@ -106,6 +112,7 @@ class GameObject {
 window.onload = () => {
   const game = new GameObject();
   window.addEventListener("keydown", (evt) => {
+    console.log(evt);
     const key = evt.key;
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
     if(keyList.includes(key)) {
@@ -124,6 +131,7 @@ window.onload = () => {
           break;
       }
       game.drawGameBoard();
+      document.getElementById('count').innerText = `Count: ${game.getCount()}`;
     }
   });
 }
