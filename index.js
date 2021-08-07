@@ -52,16 +52,19 @@ class GameObject {
       y: this.partsNum - 1
     }
   }
-  rightMove() {
+  moveParts(dx, dy) {
     // 範囲内かを確認する
-    if(this.nullPoint.x - 1 >= 0) {
-      const target = this.board[this.nullPoint.x-1][this.nullPoint.y];
+    if(this.nullPoint.x + dx >= 0 && this.nullPoint.x + dx < this.partsNum &&
+        this.nullPoint.y + dy >= 0 && this.nullPoint.y + dy < this.partsNum
+    ) {
+      const target = this.board[this.nullPoint.x+dx][this.nullPoint.y+dy];
       this.board[this.nullPoint.x][this.nullPoint.y] = {
         x: target.x,
         y: target.y
       }
-      this.board[this.nullPoint.x-1][this.nullPoint.y] = null;
-      this.nullPoint.x -= 1;
+      this.board[this.nullPoint.x+dx][this.nullPoint.y+dy] = null;
+      this.nullPoint.x += dx;
+      this.nullPoint.y += dy;
     }
   }
   drawGameBoard() {
@@ -81,6 +84,8 @@ class GameObject {
 }
 window.onload = () => {
   const game = new GameObject();
-  game.rightMove();
+  game.moveParts(-1, 0);
+  game.moveParts(0, -1);
+  game.moveParts(-1, 0);
   game.drawGameBoard();
 }
