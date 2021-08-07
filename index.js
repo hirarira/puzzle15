@@ -1,6 +1,7 @@
 "use strict"
 const BOARD_NUM = 3;
 const RANDOM_MOVER = 100;
+const FRAME_COUNT = 10;
 let restartGame;
 
 const wait = (ms) => {
@@ -31,6 +32,23 @@ class BaseImage {
       imagePartsSize,
       drawPatsSize * dx,
       drawPatsSize * dy,
+      drawPatsSize,
+      drawPatsSize
+    );
+  }
+  moveDrawImage(partsNum, px, py, dx, dy, mx, my, frame) {
+    const imagePartsSize = this.imageSize/partsNum;
+    const drawPatsSize = this.windowSize/partsNum;
+    const moveX = mx * drawPatsSize * frame / FRAME_COUNT;
+    const moveY = my * drawPatsSize * frame / FRAME_COUNT;
+    this.ctx.drawImage(
+      this.image,
+      imagePartsSize * px,
+      imagePartsSize * py,
+      imagePartsSize,
+      imagePartsSize,
+      drawPatsSize * dx + moveX,
+      drawPatsSize * dy + moveY,
       drawPatsSize,
       drawPatsSize
     );
@@ -90,7 +108,7 @@ class GameObject {
     // ランダムで動かす数を取得する
     // let randMoveNum = Number(document.getElementById("resetRandomNum").value);
     // randMoveNum = randMoveNum < 100? 100: randMoveNum;
-    const randMoveNum = 5;
+    const randMoveNum = 10;
     (async ()=>{
       await this.baseImage.onloadImage();
       for(let i=0; i<randMoveNum; i++) {
@@ -109,7 +127,19 @@ class GameObject {
       const target = this.board[this.nullPoint.x+dx][this.nullPoint.y+dy];
       this.board[this.nullPoint.x+dx][this.nullPoint.y+dy] = null;
       // 動きを入れる
-      await wait(500)
+      for(let i=0; i<FRAME_COUNT; i++) {
+        this.baseImage.moveDrawImage(
+          this.partsNum,
+          target.x,
+          target.y,
+          this.nullPoint.x+dx,
+          this.nullPoint.y+dy,
+          -1 * dx,
+          -1 * dy,
+          i
+        );
+        await wait(10);
+      }
       this.board[this.nullPoint.x][this.nullPoint.y] = {
         x: target.x,
         y: target.y
