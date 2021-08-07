@@ -17,6 +17,13 @@ class BaseImage {
     this.imageSize = 1080;
     this.ctx = ctx;
     this.windowSize = widowSize;
+    this.isLoaded = false;
+  }
+  changeIsLoaderd() {
+    this.isLoaded = true
+  }
+  getIsLoaded() {
+    return this.isLoaded;
   }
   getImage() {
     return this.image;
@@ -123,7 +130,10 @@ class GameObject {
     // randMoveNum = randMoveNum < 100? 100: randMoveNum;
     const randMoveNum = 10;
     (async ()=>{
-      await this.baseImage.onloadImage();
+      if(!this.baseImage.getIsLoaded()) {
+        await this.baseImage.onloadImage();
+        this.baseImage.changeIsLoaderd();
+      }
       for(let i=0; i<randMoveNum; i++) {
         await this.randMove();
       }
