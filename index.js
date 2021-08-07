@@ -150,6 +150,35 @@ class GameObject {
       }
     }
   }
+  keyDown(key) {
+    const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
+    if(keyList.includes(key) && !this.isClear) {
+      // カーソルを動かしたときのSEを流す
+      this.sound.move.play();
+      switch(key) {
+        case 'ArrowRight':
+          this.moveParts(-1, 0);
+          break;
+        case 'ArrowLeft':
+          this.moveParts(1, 0);
+          break;
+        case 'ArrowDown':
+          this.moveParts(0, -1);
+          break;
+        case 'ArrowUp':
+          this.moveParts(0, 1);
+          break;
+      }
+      this.drawGameBoard();
+      this.clearCheck();
+      document.getElementById('count').innerText = `Count: ${this.getCount()}`;
+      if(this.getIsClear()) {
+        // クリアファンファーレを流す
+        this.sound.clear.play();
+        document.getElementById('status').innerText = '状況：クリア！';
+      }
+    }
+  }
 }
 
 window.onload = () => {
@@ -162,32 +191,6 @@ window.onload = () => {
   }
   window.addEventListener("keydown", (evt) => {
     const key = evt.key;
-    const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
-    if(keyList.includes(key) && !game.getIsClear()) {
-      // カーソルを動かしたときのSEを流す
-      game.sound.move.play();
-      switch(key) {
-        case 'ArrowRight':
-          game.moveParts(-1, 0);
-          break;
-        case 'ArrowLeft':
-          game.moveParts(1, 0);
-          break;
-        case 'ArrowDown':
-          game.moveParts(0, -1);
-          break;
-        case 'ArrowUp':
-          game.moveParts(0, 1);
-          break;
-      }
-      game.drawGameBoard();
-      game.clearCheck();
-      document.getElementById('count').innerText = `Count: ${game.getCount()}`;
-      if(game.getIsClear()) {
-        // クリアファンファーレを流す
-        game.sound.clear.play();
-        document.getElementById('status').innerText = '状況：クリア！';
-      }
-    }
+    game.keyDown(key);
   });
 }
