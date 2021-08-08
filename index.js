@@ -2,7 +2,7 @@
 const BOARD_NUM = 3;
 const RANDOM_MOVER = 100;
 const FRAME_COUNT = 10;
-let restartGame;
+let restartGame, changeBackGround;
 
 const wait = (ms) => {
   return new Promise((resolve)=>{
@@ -95,6 +95,11 @@ class GameObject {
       clear: new Audio("./music/clear2.mp3")
     }
     this.initGame();
+  }
+  changeBackGround(id) {
+    const path = `./image/0${id}.jpg`;
+    this.baseImage.image.src = path;
+    this.drawGameBoard();
   }
   initGame() {
     this.isInit = true;
@@ -269,6 +274,9 @@ window.onload = () => {
     if(!game.isInit) {
       game.initGame();
     }
+  }
+  changeBackGround = (id) => {
+    game.changeBackGround(id);
   }
   window.addEventListener("keydown", async (evt) => {
     const key = evt.key;

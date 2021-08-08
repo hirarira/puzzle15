@@ -22,3 +22,9 @@
 #restart {
   margin-top: 10px
 }
+.thumbnail {
+  width: 10vw;
+}
+.thumbnailArea {
+  margin-top: 20px;
+}
