@@ -11,10 +11,10 @@ const wait = (ms) => {
 } 
 
 class BaseImage {
-  constructor(ctx, widowSize, src = "./image/annica.jpg") {
+  constructor(ctx, widowSize, src = "./image/03.jpg") {
     this.image = new Image();
     this.image.src = src;
-    this.imageSize = 1080;
+    this.imageSize = 2400;
     this.ctx = ctx;
     this.windowSize = widowSize;
     this.isLoaded = false;
@@ -140,7 +140,7 @@ class GameObject {
       this.isClear = false;
       this.isInit = false;
       document.getElementById('status').innerText = '状況：プレイ中';
-      document.getElementById('count').innerText = `Count: ${game.getCount()}`;
+      document.getElementById('count').innerText = `Count: ${this.moveCount}`;
     })()
   }
   async moveParts(dx, dy) {
