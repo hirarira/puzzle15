@@ -24,6 +24,9 @@
 }
 .thumbnail {
   width: 10vw;
+  height: 10vw;
+  max-width: 120px;
+  max-height: 120px;
 }
 .thumbnailArea {
   margin-top: 20px;
