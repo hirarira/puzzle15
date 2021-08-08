@@ -18,6 +18,7 @@ class BaseImage {
     this.ctx = ctx;
     this.windowSize = widowSize;
     this.isLoaded = false;
+    this.isInit = false;
   }
   changeIsLoaderd() {
     this.isLoaded = true
@@ -96,9 +97,8 @@ class GameObject {
     this.initGame();
   }
   initGame() {
-    // リスタートボタンを非表示にする
-    // const restartArea = document.getElementById("restart");
-    // restartArea.style.display = 'none';
+    this.isInit = true;
+    document.getElementById('status').innerText = '状況：初期化中';
     // 背景画像が入力されているかを確認する
     const imageURLPath = document.getElementById("imageURLInput").value;
     if(imageURLPath) {
@@ -138,6 +138,9 @@ class GameObject {
       }
       this.moveCount = 0;
       this.isClear = false;
+      this.isInit = false;
+      document.getElementById('status').innerText = '状況：プレイ中';
+      document.getElementById('count').innerText = `Count: ${game.getCount()}`;
     })()
   }
   async moveParts(dx, dy) {
@@ -263,9 +266,9 @@ class GameObject {
 window.onload = () => {
   const game = new GameObject();
   restartGame = () => {
-    game.initGame();
-    document.getElementById('status').innerText = '状況：プレイ中';
-    document.getElementById('count').innerText = `Count: ${game.getCount()}`;
+    if(!game.isInit) {
+      game.initGame();
+    }
   }
   window.addEventListener("keydown", async (evt) => {
     const key = evt.key;
