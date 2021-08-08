@@ -14,7 +14,7 @@ class BaseImage {
   constructor(ctx, widowSize, src = "./image/03.jpg") {
     this.image = new Image();
     this.image.src = src;
-    this.imageSize = 2400;
+    this.imageSize = 800;
     this.ctx = ctx;
     this.windowSize = widowSize;
     this.isLoaded = false;
