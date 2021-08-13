@@ -1,5 +1,4 @@
 "use strict"
-const FRAME_COUNT = 10;
 
 class BaseImage {
   constructor(ctx, widowSize, src = "./image/03.jpg") {
@@ -48,11 +47,11 @@ class BaseImage {
       drawPatsSize
     );
   }
-  moveDrawImage(partsNum, px, py, dx, dy, mx, my, frame) {
+  moveDrawImage(partsNum, px, py, dx, dy, mx, my, frame, frame_count) {
     const imagePartsSize = this.imageSize/partsNum;
     const drawPatsSize = this.windowSize/partsNum;
-    const moveX = mx * drawPatsSize * frame / FRAME_COUNT;
-    const moveY = my * drawPatsSize * frame / FRAME_COUNT;
+    const moveX = mx * drawPatsSize * frame / frame_count;
+    const moveY = my * drawPatsSize * frame / frame_count;
     this.ctx.drawImage(
       this.image,
       imagePartsSize * px,

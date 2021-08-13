@@ -76,7 +76,9 @@ class GameObject {
       document.getElementById('count').innerText = `Count: ${this.moveCount}`;
     })()
   }
-  async moveParts(dx, dy) {
+  async moveParts(dx, dy, isAuto = false) {
+    // 1フレーム当たりのwaitタイミング
+    const frameCount = isAuto? 5: 10;
     // 範囲内かを確認する
     if(this.nullPoint.x + dx >= 0 && this.nullPoint.x + dx < this.partsNum &&
         this.nullPoint.y + dy >= 0 && this.nullPoint.y + dy < this.partsNum
@@ -85,7 +87,7 @@ class GameObject {
       const target = this.board[this.nullPoint.x+dx][this.nullPoint.y+dy];
       this.board[this.nullPoint.x+dx][this.nullPoint.y+dy] = null;
       // 動きを入れる
-      for(let i=0; i<FRAME_COUNT; i++) {
+      for(let i=0; i<frameCount; i++) {
         this.baseImage.moveDrawImage(
           this.partsNum,
           target.x,
@@ -94,7 +96,8 @@ class GameObject {
           this.nullPoint.y+dy,
           -1 * dx,
           -1 * dy,
-          i
+          i,
+          frameCount
         );
         await wait(10);
       }
@@ -133,16 +136,16 @@ class GameObject {
     const num = Math.floor(Math.random()*4);
     switch(num){
       case 0:
-        await this.moveParts(-1, 0);
+        await this.moveParts(-1, 0, true);
         break;
       case 1:
-        await this.moveParts(1, 0);
+        await this.moveParts(1, 0, true);
         break;
       case 2:
-        await this.moveParts(0, 1);
+        await this.moveParts(0, 1, true);
         break;
       case 3:
-        await this.moveParts(0, -1);
+        await this.moveParts(0, -1, true);
         break;
     }
   }
