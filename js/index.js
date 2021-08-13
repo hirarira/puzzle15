@@ -84,6 +84,10 @@ class GameObject {
         this.nullPoint.y + dy >= 0 && this.nullPoint.y + dy < this.partsNum
     ) {    
       this.isMoving = true;
+      if(!isAuto) {
+        // カーソルを動かしたときのSEを流す
+        this.sound.move.play();
+      }
       const target = this.board[this.nullPoint.x+dx][this.nullPoint.y+dy];
       this.board[this.nullPoint.x+dx][this.nullPoint.y+dy] = null;
       // 動きを入れる
@@ -166,8 +170,6 @@ class GameObject {
   async keyDown(key) {
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
     if(keyList.includes(key) && !this.isClear && !this.isMoving) {
-      // カーソルを動かしたときのSEを流す
-      this.sound.move.play();
       switch(key) {
         case 'ArrowRight':
           await this.moveParts(-1, 0);
