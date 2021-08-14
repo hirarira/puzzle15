@@ -203,9 +203,6 @@ class GameObject {
     if(posDiff.x === 0 && posDiff.y === 1) {
       await this.moveParts(0, 1);
     }
-    if(posDiff.x === 1 && posDiff.y === 1) {
-      await this.moveParts(1, 1);
-    }
     this.drawGameBoard();
     this.clearCheck();
   }
