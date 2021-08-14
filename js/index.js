@@ -10,7 +10,7 @@ const wait = (ms) => {
 } 
 
 class GameObject {
-  constructor() {
+  constructor(clickEvent) {
     this.canvas = document.getElementById('canvas');
     this.ctx = canvas.getContext('2d');
     this.windowSize = 800;
@@ -22,7 +22,7 @@ class GameObject {
       move: new Audio("./music/cursor1.wav"),
       clear: new Audio("./music/clear2.mp3")
     }
-    this.onClick = this.canvas.addEventListener("click", this.clickEvent);
+    this.onClick = this.canvas.addEventListener("click", clickEvent);
     this.initGame();
   }
   changeBackGround(id) {
@@ -117,9 +117,6 @@ class GameObject {
       this.isMoving = false;
     }
   }
-  clickEvent(e) {
-    console.log(e);
-  }
   getCount() {
     return this.moveCount;
   }
@@ -171,6 +168,31 @@ class GameObject {
   clearDrawBoard() {
     this.baseImage.gameClearDraw();
   }
+  moveClick(pos) {
+    const posDiff = {
+      x: pos.x - this.nullPoint.x,
+      y: pos.y - this.nullPoint.y
+    }
+    // 空白左のマスがクリックされた場合
+    if(posDiff.x === -1 && posDiff.y === 0) {
+      this.moveParts(-1, 0);
+    }
+    // 空白右のマスがクリックされた場合
+    if(posDiff.x === 1 && posDiff.y === 0) {
+      this.moveParts(1, 0);
+    }
+    // 空白上のマスがクリックされた場合
+    if(posDiff.x === 0 && posDiff.y === -1) {
+      this.moveParts(0, -1);
+    }
+    // 空白下のマスがクリックされた場合
+    if(posDiff.x === 0 && posDiff.y === 1) {
+      this.moveParts(0, 1);
+    }
+    if(posDiff.x === 1 && posDiff.y === 1) {
+      this.moveParts(1, 1);
+    }
+  }
   async keyDown(key) {
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
     if(keyList.includes(key) && !this.isClear && !this.isMoving) {
@@ -206,7 +228,16 @@ class GameObject {
 }
 
 window.onload = () => {
-  const game = new GameObject();
+  // クリックした際に呼ばれる
+  const clickEvent = (e) => {
+    const partsWidth = Math.floor(game.windowSize / game.partsNum);
+    const pos = {
+      x: Math.floor(e.layerX / partsWidth),
+      y: Math.floor(e.layerY / partsWidth)
+    }
+    game.moveClick(pos);
+  }
+  const game = new GameObject(clickEvent);
   restartGame = () => {
     if(!game.isInit) {
       game.initGame();
