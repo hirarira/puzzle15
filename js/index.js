@@ -22,6 +22,7 @@ class GameObject {
       move: new Audio("./music/cursor1.wav"),
       clear: new Audio("./music/clear2.mp3")
     }
+    this.onClick = this.canvas.addEventListener("click", this.clickEvent);
     this.initGame();
   }
   changeBackGround(id) {
@@ -115,6 +116,9 @@ class GameObject {
       this.moveCount++;    
       this.isMoving = false;
     }
+  }
+  clickEvent(e) {
+    console.log(e);
   }
   getCount() {
     return this.moveCount;
