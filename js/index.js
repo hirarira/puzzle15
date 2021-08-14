@@ -136,6 +136,17 @@ class GameObject {
       }
     }
     this.isClear = isClear;
+    document.getElementById('count').innerText = `Count: ${this.getCount()}`;
+    if(this.getIsClear()) {
+      // クリアファンファーレを流す
+      this.sound.clear.play();
+      document.getElementById('status').innerText = '状況：クリア！';
+      this.board[this.partsNum-1][this.partsNum-1] = {
+        x: this.partsNum,
+        y: this.partsNum
+      };
+      this.clearDrawBoard();
+    }
   }
   async randMove() {
     const num = Math.floor(Math.random()*4);
@@ -168,30 +179,35 @@ class GameObject {
   clearDrawBoard() {
     this.baseImage.gameClearDraw();
   }
-  moveClick(pos) {
+  async moveClick(pos) {
+    if(this.isClear || this.isMoving) {
+      return;
+    }
     const posDiff = {
       x: pos.x - this.nullPoint.x,
       y: pos.y - this.nullPoint.y
     }
     // 空白左のマスがクリックされた場合
     if(posDiff.x === -1 && posDiff.y === 0) {
-      this.moveParts(-1, 0);
+      await this.moveParts(-1, 0);
     }
     // 空白右のマスがクリックされた場合
     if(posDiff.x === 1 && posDiff.y === 0) {
-      this.moveParts(1, 0);
+      await this.moveParts(1, 0);
     }
     // 空白上のマスがクリックされた場合
     if(posDiff.x === 0 && posDiff.y === -1) {
-      this.moveParts(0, -1);
+      await this.moveParts(0, -1);
     }
     // 空白下のマスがクリックされた場合
     if(posDiff.x === 0 && posDiff.y === 1) {
-      this.moveParts(0, 1);
+      await this.moveParts(0, 1);
     }
     if(posDiff.x === 1 && posDiff.y === 1) {
-      this.moveParts(1, 1);
+      await this.moveParts(1, 1);
     }
+    this.drawGameBoard();
+    this.clearCheck();
   }
   async keyDown(key) {
     const keyList = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
@@ -212,17 +228,6 @@ class GameObject {
       }
       this.drawGameBoard();
       this.clearCheck();
-      document.getElementById('count').innerText = `Count: ${this.getCount()}`;
-      if(this.getIsClear()) {
-        // クリアファンファーレを流す
-        this.sound.clear.play();
-        document.getElementById('status').innerText = '状況：クリア！';
-        this.board[this.partsNum-1][this.partsNum-1] = {
-          x: this.partsNum,
-          y: this.partsNum
-        };
-        this.clearDrawBoard();
-      }
     }
   }
 }
